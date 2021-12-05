@@ -3,6 +3,9 @@ const app = express()
 const path = require("path")
 const mongoose = require("mongoose");
 const players = require("./src/models/player_model");
+const { MONGO_URL, PORT } = require("./config");
+
+
 
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "src", "views"))
@@ -11,7 +14,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use("/", express.static(path.join(__dirname, "src", "public")))
 
-mongoose.connect("mongodb://localhost:27017/snake_winners").then(() => {
+mongoose.connect(MONGO_URL).then(() => {
     console.log("connected to db");
 }).catch((err) => {
     console.log("connection failed", err + "");
@@ -45,6 +48,6 @@ app.post("/add_score", async (req, res) => {
     }
 })
 
-app.listen(1588, () => {
+app.listen(PORT, () => {
     console.log("server started at 1580")
 })
