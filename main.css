@@ -1,0 +1,85 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.game_wrapper {
+  font-family: sans-serif;
+  width: 600px;
+}
+.game_wrapper nav {
+  background-color: #4a752c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+}
+.game_wrapper nav .nav_left {
+  display: flex;
+}
+.game_wrapper nav .nav_left .aic {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  color: white;
+}
+.game_wrapper nav .nav_left img {
+  margin-right: 10px;
+  width: 38px;
+  height: 38px;
+}
+.game_wrapper nav .nav_left .score {
+  margin-right: 30px;
+}
+.game_wrapper nav .nav_right img {
+  width: 30px;
+  height: 30px;
+}
+.game_wrapper .game_border {
+  padding: 23px;
+  background-color: #578a34;
+}
+.game_wrapper .game_border .game {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+}
+.game_wrapper .game_border .game .square {
+  width: 32.58px;
+  height: 32.58px;
+}
+.game_wrapper .game_border .game .square.white {
+  background-color: #add460;
+}
+.game_wrapper .game_border .game .square.black {
+  background-color: #bbe768;
+}
+.game_wrapper .game_border .game #apple {
+  width: 32.58px;
+  height: 32.58px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.game_wrapper .game_border .game .snake {
+  background-color: black;
+  border-radius: 20px;
+  width: 32.58px;
+  height: 32.58px;
+  position: absolute;
+  left: 260.64px;
+  bottom: 228px;
+}
+.game_wrapper .game_border .game .snake.tail {
+  background-color: rgba(0, 217, 255, 0.712);
+}/*# sourceMappingURL=main.css.map */
