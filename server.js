@@ -12,7 +12,7 @@ app.set("views", path.join(__dirname, "src", "views"))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use("/", express.static(path.join(__dirname, "src", "public")))
+app.use("/static", express.static(path.join(__dirname, "src", "public")))
 
 mongoose.connect(MONGO_URL).then(() => {
     console.log("connected to db");
@@ -49,5 +49,5 @@ app.post("/add_score", async (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log("server started at 1580")
+    console.log("server started at port")
 })

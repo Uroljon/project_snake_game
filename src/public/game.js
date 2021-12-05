@@ -5,8 +5,8 @@ let apple = null;
 let has_eaten = false;
 let score = 0;
 let snake_body = [];
-let game_over = new Audio('./assets/game_over.ogg');
-let eat_apple = new Audio("./assets/bite.mp3");
+let game_over = new Audio('/static/assets/game_over.ogg');
+let eat_apple = new Audio("/static/assets/bite.mp3");
 let muted = false;
 
 function init_game() {
