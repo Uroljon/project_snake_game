@@ -5,6 +5,10 @@ let apple = null;
 let has_eaten = false;
 let score = 0;
 let snake_body = [];
+let game_over = new Audio('./assets/game_over.ogg');
+let eat_apple = new Audio("./assets/bite.mp3");
+let muted = false;
+
 function init_game() {
     let game = document.querySelector('.game');
     for (let y = 15; y > 0; y--) {
@@ -21,7 +25,8 @@ function init_game() {
     game.innerHTML += `<span id="apple" data-x="${x_rand}" data-y="${y_rand}" style="left:${(x_rand - 1) * 32.58}px; bottom: ${(y_rand - 1) * 32.58}px">🍎</span>`
 }
 init_game()
-// control snake
+
+// ===================================control snake=======================================
 document.body.addEventListener("keydown", (e) => {
     if ((e.key == "ArrowRight" && prev_dir !== "ArrowLeft") || (e.key == "ArrowLeft" && prev_dir !== "ArrowRight") || (e.key == "ArrowDown" && prev_dir !== "ArrowUp") || (e.key == "ArrowUp" && prev_dir !== "ArrowDown") || (e.key === " ")) {
         move(e.key)
@@ -31,12 +36,12 @@ document.body.addEventListener("keydown", (e) => {
 function move(dir) {
     let snake = document.querySelector('.snake');
     clearInterval(run_interval_id) //har safar keyboard bosilganda eski interval ochiriladi
+
     run_interval_id = setInterval(() => {
         let game = document.querySelector('.game');
         let x = Number(snake.getAttribute("data-x"))
         let y = Number(snake.getAttribute("data-y"));
-
-        // =============================SNAKE UCHUN========================================
+        // target snake
         if (dir == "ArrowRight" && prev_dir !== "ArrowLeft") {
             (x === 17) ? x = 1 : x++;
         } else if (dir == "ArrowLeft" && prev_dir !== "ArrowRight") {
@@ -48,17 +53,21 @@ function move(dir) {
         } else if (dir === " ") { //stop snake
             clearInterval(run_interval_id)
         }
+        // if snake is dead
         for (let i = 0; i < snake_body.length; i++) {
             if (snake_body[i].x === x && snake_body[i].y === y) {
                 clearInterval(run_interval_id) //game over
+                muted ? "" : game_over.play();
+                document.querySelector('#game_over_modal').classList.add("active");
                 return false
             }
         }
+        // move snake_head one step
         snake.style.left = `${(x - 1) * 32.58}px`;
         snake.style.bottom = `${(y - 1) * 32.58}px`;
         snake.setAttribute("data-x", `${x}`)
         snake.setAttribute("data-y", `${y}`)
-        // ==========================snake 1 qadam yurdi...===============================
+        // snake_head has moved !!!
         // move snake_body
         if (snake_body.length) {
             if (snake_body.length === 1) {
@@ -71,7 +80,7 @@ function move(dir) {
                 create_tail(x, y)
             }
         }
-
+        // if snake eats apple
         if (document.querySelector('#apple').getAttribute("data-x") == x && document.querySelector('#apple').getAttribute("data-y") == y) { //olmani yedi
             earn_score()
             create_tail(x, y)
@@ -81,6 +90,7 @@ function move(dir) {
     prev_dir = dir;
 }
 function earn_score() {
+    muted ? "" : eat_apple.play()
     score++;
     let x_rand = Math.ceil(Math.random() * 17)
     let y_rand = Math.ceil(Math.random() * 15)
@@ -90,7 +100,9 @@ function earn_score() {
     // while (snake_body.includes(document.querySelector(`[data-y="${y_rand}"]`))) {
     //     y_rand = Math.ceil(Math.random() * 15)
     // }
-    document.querySelector('#score_val').innerHTML = `${score}`
+    document.querySelectorAll('.score_val').forEach(element => {
+        element.innerHTML = `${score}`
+    });
     document.querySelector('#apple').setAttribute("data-x", `${x_rand}`)
     document.querySelector('#apple').setAttribute("data-y", `${y_rand}`)
     document.querySelector('#apple').style.left = `${(x_rand - 1) * 32.58}px`
@@ -110,6 +122,25 @@ function create_tail(x, y) {
         y
     })
 }
+
+document.querySelector('#close_modal').addEventListener("click", (e) => {
+    e.preventDefault()
+    document.querySelector('#game_over_modal').classList.remove("active");
+});
+document.querySelector('#mute').addEventListener("click", (e) => {
+    if(muted){
+        e.target.src = "https://www.gstatic.com/images/icons/material/system/2x/volume_up_white_24dp.png";
+        muted = false
+    }else{
+        e.target.src = "https://www.gstatic.com/images/icons/material/system/2x/volume_off_white_24dp.png";
+        muted = true
+    }
+});
+document.querySelector('#re_play').addEventListener("click", (e) => {
+    window.location.reload()
+});
+
+
 
 /* TRASH
  // let snake = document.querySelector('.snake');

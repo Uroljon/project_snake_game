@@ -16,6 +16,9 @@ body {
   font-family: sans-serif;
   width: 600px;
 }
+.game_wrapper #mute, .game_wrapper #replay {
+  cursor: pointer;
+}
 .game_wrapper nav {
   background-color: #4a752c;
   display: flex;
@@ -82,4 +85,68 @@ body {
 }
 .game_wrapper .game_border .game .snake.tail {
   background-color: rgba(0, 217, 255, 0.712);
+}
+.game_wrapper #game_over_modal {
+  transition: 1s;
+  transform: scale(0);
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.801);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.game_wrapper #game_over_modal.active {
+  transform: scale(1);
+}
+.game_wrapper #game_over_modal .score_val {
+  color: red;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.game_wrapper #game_over_modal p {
+  font-size: 1.4rem;
+  margin: 5px 0;
+  display: block;
+}
+.game_wrapper #game_over_modal label {
+  margin-top: 50px;
+  text-align: center;
+}
+.game_wrapper #game_over_modal input {
+  margin: 15px 0 10px 0;
+  padding: 5px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.7rem;
+  border: 1px solid transparent;
+  outline: none;
+}
+.game_wrapper #game_over_modal input:hover {
+  border: 1px solid blue;
+  box-shadow: 0 0 5px 5px white;
+}
+.game_wrapper #game_over_modal button {
+  margin: 5px 10px;
+  font-size: 1.2rem;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+  transform: scale(1);
+}
+.game_wrapper #game_over_modal button#close {
+  color: red;
+}
+.game_wrapper #game_over_modal button#submit {
+  color: #0099ff;
+}
+.game_wrapper #game_over_modal button:hover {
+  transform: scale(1.2);
 }/*# sourceMappingURL=main.css.map */
