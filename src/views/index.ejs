@@ -1,0 +1,68 @@
+<% var best_name ; var best_score; var Leaderboards %>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Snake Game by KhiU</title>
+        <link rel="stylesheet" href="/main.css">
+        <link rel="shortcut icon" href="https://uroljon.github.io/Khidirboev/img/icon.png" type="image/x-icon">
+    </head>
+
+    <body>
+        <div class="game_wrapper">
+            <nav>
+                <div class="nav_left">
+                    <div class="score aic">
+                        <img src="https://www.google.com/logos/fnbx/snake_arcade/v3/apple_00.png" alt="🍎">
+                        <span class="score_val">0</span>
+                    </div>
+                    <div class="max aic">
+                        <img id="show_leaderboards" src="https://www.google.com/logos/fnbx/snake_arcade/v3/trophy_00.png" alt="🏆">
+                        <span id="max_val">
+                            <%=best_score %>
+                        </span>
+                    </div>
+                    <p id="max_name">
+                        <%=best_name %>
+                    </p>
+                </div>
+                <div class="nav_right">
+                    <img id="mute"
+                        src="https://www.gstatic.com/images/icons/material/system/2x/volume_up_white_24dp.png"
+                        alt="mute">
+                    <img id="re_play" src="/assets/re.png" alt="">
+                </div>
+            </nav>
+            <div class="game_border">
+                <div class="game">
+                    <div class="snake" data-x="9" data-y="8"></div>
+                </div>
+            </div>
+            <div id="game_over_modal">
+                <p>🐍 has died 😢</p>
+                <p>Your score is <span class="score_val">0</span></p>
+                <label for="name">Please write your name. <br> so we can know who is the best player :</label>
+                <input type="text" id="name" name="player">
+                <p class="name_error">Too long name !!!</p>
+                <div class="btns">
+                    <button id="close_modal">Close</button>
+                    <button type="submit" id="submit">Submit</button>
+                </div>
+            </div>
+            <div id="leaderboard_modal">
+                <h3>Leaderboard</h3>
+                <div>
+                    <% for(let i=0; i<leaderboards.length; i++){ %>
+                        <p><span class="order"><%=i+1 %>. </span> <span class="who"><%=leaderboards[i].name %> ➡️</span> <span class="how_much"><%=leaderboards[i].score %> </span></p>
+                    <% } %> 
+                </div>
+                <button class="close_leaderboards">Close</button>
+            </div>
+        </div>
+        <script src="/game.js"></script>
+    </body>
+
+    </html>

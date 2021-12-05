@@ -52,6 +52,7 @@ function move(dir) {
             (y === 15) ? y = 1 : y++;
         } else if (dir === " ") { //stop snake
             clearInterval(run_interval_id)
+            return;
         }
         // if snake is dead
         for (let i = 0; i < snake_body.length; i++) {
@@ -59,6 +60,11 @@ function move(dir) {
                 clearInterval(run_interval_id) //game over
                 muted ? "" : game_over.play();
                 document.querySelector('#game_over_modal').classList.add("active");
+                document.querySelector('#name').focus()
+                snake_body.forEach((body) => {
+                    body.tail.remove()
+                });
+                snake_body = [];
                 return false
             }
         }
@@ -94,12 +100,18 @@ function earn_score() {
     score++;
     let x_rand = Math.ceil(Math.random() * 17)
     let y_rand = Math.ceil(Math.random() * 15)
-    // while (snake_body.includes(document.querySelector(`[data-x="${x_rand}"]`))) {
-    //     x_rand = Math.ceil(Math.random() * 17)
-    // }
-    // while (snake_body.includes(document.querySelector(`[data-y="${y_rand}"]`))) {
-    //     y_rand = Math.ceil(Math.random() * 15)
-    // }
+// shu joyiga bir nima o'ylash kerak. While ga tushmadi
+    for (let i = 0; i < snake_body.length; i++) {
+        if (snake_body[i].x === x_rand && snake_body[i].y === y_rand) {
+            x_rand = Math.ceil(Math.random() * 17)
+            y_rand = Math.ceil(Math.random() * 15)
+            // again = true;
+            // break;
+        } 
+        // else {
+        //     again = false
+        // }
+    }
     document.querySelectorAll('.score_val').forEach(element => {
         element.innerHTML = `${score}`
     });
@@ -123,15 +135,23 @@ function create_tail(x, y) {
     })
 }
 
+document.querySelector('#show_leaderboards').addEventListener("click", () => {
+    document.querySelector('#leaderboard_modal').classList.add("active");
+});
+document.querySelector('.close_leaderboards').addEventListener("click", (e) => {
+    e.preventDefault()
+    document.querySelector('#leaderboard_modal').classList.remove("active");
+});
 document.querySelector('#close_modal').addEventListener("click", (e) => {
     e.preventDefault()
+    score = 0;
     document.querySelector('#game_over_modal').classList.remove("active");
 });
 document.querySelector('#mute').addEventListener("click", (e) => {
-    if(muted){
+    if (muted) {
         e.target.src = "https://www.gstatic.com/images/icons/material/system/2x/volume_up_white_24dp.png";
         muted = false
-    }else{
+    } else {
         e.target.src = "https://www.gstatic.com/images/icons/material/system/2x/volume_off_white_24dp.png";
         muted = true
     }
@@ -140,84 +160,26 @@ document.querySelector('#re_play').addEventListener("click", (e) => {
     window.location.reload()
 });
 
-
-
-/* TRASH
- // let snake = document.querySelector('.snake');
-    // let dir = e.key;
-    {
-
-
-        // function move_snake(x, y) {
-        //     snake.style.left = `${(x - 1) * 32.58}px`;
-        //     snake.style.bottom = `${(y - 1) * 32.58}px`;
-        //     snake.setAttribute("data-x", `${x}`)
-        //     snake.setAttribute("data-y", `${y}`)
-        // }
-        // if (dir == "ArrowRight" && prev_dir !== "ArrowLeft") {
-        //     clearInterval(run_interval_id)
-        //     run_interval_id = setInterval(() => {
-        //         let x = Number(snake.getAttribute("data-x"))
-        //         let y = Number(snake.getAttribute("data-y"));
-        //         (x === 17) ? x = 1 : x++;
-        //         move_snake(x, y)
-        //     }, snake_speed);
-
-        //     prev_dir = dir;
-
-        // } else if (dir == "ArrowLeft" && prev_dir !== "ArrowRight") {
-        //     clearInterval(run_interval_id)
-
-        //     run_interval_id = setInterval(() => {
-        //         let x = Number(snake.getAttribute("data-x"));
-        //         let y = Number(snake.getAttribute("data-y"));
-        //         (x === 1) ? x = 17 : x--;
-        //         move_snake(x, y)
-        //     }, snake_speed);
-
-        //     prev_dir = dir;
-
-        // } else if (dir == "ArrowDown" && prev_dir !== "ArrowUp") {
-        //     clearInterval(run_interval_id)
-
-        //     run_interval_id = setInterval(() => {
-        //         let x = Number(snake.getAttribute("data-x"));
-        //         let y = Number(snake.getAttribute("data-y"));
-        //         (y === 1) ? y = 15 : y--;
-        //         move_snake(x, y)
-        //     }, snake_speed);
-
-        //     prev_dir = dir;
-
-        // } else if (dir == "ArrowUp" && prev_dir !== "ArrowDown") {
-        //     clearInterval(run_interval_id)
-
-        //     run_interval_id = setInterval(() => {
-        //         let x = Number(snake.getAttribute("data-x"));
-        //         let y = Number(snake.getAttribute("data-y"));
-        //         (y === 15) ? y = 1 : y++;
-        //         move_snake(x, y)
-        //     }, snake_speed);
-
-        //     prev_dir = dir;
-
-        // } else if (dir === " ") { //stop snake
-        //     clearInterval(run_interval_id)
-        // }
+document.querySelector('#submit').addEventListener("click", async (e) => {
+    e.preventDefault()
+    let player = document.querySelector('#name').value;
+    if (player.length < 20 && player.length > 1) {
+        document.querySelector('#game_over_modal').classList.remove("active");
+        fetch("/add_score", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                player,
+                scored: score
+            })
+        })
     }
+});
 
-
-     // let tail = document.createElement("div");
-            // tail.classList.add("snake")
-            // tail.classList.add("tail")
-            // tail.setAttribute("tail-x", x)
-            // tail.setAttribute("tail-y", y)
-            // tail.style.left = `${(x - 1) * 32.58}px`;
-            // tail.style.bottom = `${(y - 1) * 32.58}px`;
-            // snake_body.push(tail)
-            // snake_body.shift()
-            // document.querySelector(`[tail-x = "${x}"]`)
-            // document.querySelector(`[tail-x = "${snake_body[0].x}"]`).remove();
-            // document.querySelector(`[tail-x = "${snake_body[0].x}"]`).setAttribute("data-x", `${x}`)
-            // snake.setAttribute("data-y", `${y}`)
-*/
+document.querySelector('#name').addEventListener("keyup", (e) => {
+    if (e.target.value.length > 20) {
+        document.querySelector('.name_error').classList.add("active");
+    } else {
+        document.querySelector('.name_error').classList.remove("active");
+    }
+});
