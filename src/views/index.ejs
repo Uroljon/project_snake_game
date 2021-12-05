@@ -7,8 +7,257 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Snake Game by KhiU</title>
-        <link rel="stylesheet" href="/static/main.css">
+        <!-- <link rel="stylesheet" href="/static/main.css"> -->
         <link rel="shortcut icon" href="https://uroljon.github.io/Khidirboev/img/icon.png" type="image/x-icon">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                display: grid;
+                align-items: center;
+                justify-content: center;
+                width: 100vw;
+                height: 100vh;
+            }
+
+            .game_wrapper {
+                font-family: sans-serif;
+                width: 600px;
+            }
+
+            .game_wrapper #mute,
+            .game_wrapper #replay {
+                cursor: pointer;
+            }
+
+            .game_wrapper nav {
+                background-color: #4a752c;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+            }
+
+            .game_wrapper nav .nav_left {
+                display: grid;
+                grid-template-columns: auto auto 1fr;
+                align-items: center;
+                font-size: 20px;
+                color: white;
+            }
+
+            .game_wrapper nav .nav_left .aic {
+                display: flex;
+                align-items: center;
+            }
+
+            .game_wrapper nav .nav_left img {
+                margin-right: 10px;
+                width: 38px;
+                height: 38px;
+            }
+
+            .game_wrapper nav .nav_left img#show_leaderboards {
+                cursor: pointer;
+            }
+
+            .game_wrapper nav .nav_left .score {
+                margin-right: 30px;
+            }
+
+            .game_wrapper nav .nav_left #max_name {
+                text-align: center;
+                display: block;
+            }
+
+            .game_wrapper nav .nav_right img {
+                width: 30px;
+                height: 30px;
+                cursor: pointer;
+            }
+
+            .game_wrapper .game_border {
+                padding: 23px;
+                background-color: #578a34;
+            }
+
+            .game_wrapper .game_border .game {
+                position: relative;
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .game_wrapper .game_border .game .square {
+                width: 32.58px;
+                height: 32.58px;
+            }
+
+            .game_wrapper .game_border .game .square.white {
+                background-color: #add460;
+            }
+
+            .game_wrapper .game_border .game .square.black {
+                background-color: #bbe768;
+            }
+
+            .game_wrapper .game_border .game #apple {
+                width: 32.58px;
+                height: 32.58px;
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .game_wrapper .game_border .game .snake {
+                background-color: #253d7c;
+                border-radius: 50%;
+                width: 32.58px;
+                height: 32.58px;
+                position: absolute;
+                left: 260.64px;
+                bottom: 228px;
+            }
+
+            .game_wrapper .game_border .game .snake.tail {
+                transform: scale(0.85);
+                background-color: #3254aa;
+            }
+
+            .game_wrapper #game_over_modal {
+                transition: 1s;
+                transform: scale(0);
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background-color: rgba(0, 0, 0, 0.801);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+
+            .game_wrapper #game_over_modal.active {
+                transform: scale(1);
+            }
+
+            .game_wrapper #game_over_modal .name_error {
+                color: red;
+                display: none;
+            }
+
+            .game_wrapper #game_over_modal .name_error.active {
+                display: block;
+            }
+
+            .game_wrapper #game_over_modal .score_val {
+                color: red;
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+
+            .game_wrapper #game_over_modal p {
+                font-size: 1.4rem;
+                margin: 5px 0;
+                display: block;
+            }
+
+            .game_wrapper #game_over_modal label {
+                margin-top: 50px;
+                text-align: center;
+            }
+
+            .game_wrapper #game_over_modal input {
+                margin: 15px 0 10px 0;
+                padding: 5px 15px;
+                border: none;
+                border-radius: 5px;
+                font-size: 1.7rem;
+                border: 1px solid transparent;
+                outline: none;
+            }
+
+            .game_wrapper #game_over_modal input:hover {
+                border: 1px solid blue;
+                box-shadow: 0 0 5px 5px white;
+            }
+
+            .game_wrapper #game_over_modal button {
+                margin: 5px 10px;
+                font-size: 1.2rem;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 7px;
+                cursor: pointer;
+                font-weight: bold;
+                transform: scale(1);
+            }
+
+            .game_wrapper #game_over_modal button#close {
+                color: red;
+            }
+
+            .game_wrapper #game_over_modal button#submit {
+                color: #0099ff;
+            }
+
+            .game_wrapper #game_over_modal button:hover {
+                transform: scale(1.2);
+            }
+
+            .game_wrapper #leaderboard_modal {
+                transition: 1s;
+                transform: scale(0);
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background-color: rgba(0, 0, 0, 0.801);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+
+            .game_wrapper #leaderboard_modal.active {
+                transform: scale(1);
+            }
+
+            .game_wrapper #leaderboard_modal h3 {
+                text-shadow: 0px 0px 2px white;
+            }
+
+            .game_wrapper #leaderboard_modal p {
+                margin: 10px 0;
+            }
+
+            .game_wrapper #leaderboard_modal button {
+                margin: 5px 10px;
+                font-size: 1.2rem;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 7px;
+                cursor: pointer;
+                font-weight: bold;
+                transform: scale(1);
+            }
+
+            .game_wrapper #leaderboard_modal button:hover {
+                transform: scale(1.2);
+            }
+
+            /*# sourceMappingURL=main.css.map */
+        </style>
     </head>
 
     <body>
@@ -20,7 +269,8 @@
                         <span class="score_val">0</span>
                     </div>
                     <div class="max aic">
-                        <img id="show_leaderboards" src="https://www.google.com/logos/fnbx/snake_arcade/v3/trophy_00.png" alt="🏆">
+                        <img id="show_leaderboards"
+                            src="https://www.google.com/logos/fnbx/snake_arcade/v3/trophy_00.png" alt="🏆">
                         <span id="max_val">
                             <%=best_score %>
                         </span>
@@ -57,14 +307,206 @@
                 <div>
                     <% if(leaderboards?.length) {%>
                         <% for(let i=0; i<leaderboards.length; i++){ %>
-                            <p><span class="order"><%=i+1 %>. </span> <span class="who"><%=leaderboards[i].name %> ➡️</span> <span class="how_much"><%=leaderboards[i].score %> </span></p>
-                        <% } %> 
-                    <% } %>  
+                            <p><span class="order">
+                                    <%=i+1 %>.
+                                </span> <span class="who">
+                                    <%=leaderboards[i].name %> ➡️
+                                </span> <span class="how_much">
+                                    <%=leaderboards[i].score %>
+                                </span></p>
+                            <% } %>
+                                <% } %>
                 </div>
                 <button class="close_leaderboards">Close</button>
             </div>
         </div>
-        <script src="/static/game.js"></script>
+        <script>
+            let run_interval_id = null;
+            let prev_dir = null;
+            let snake_speed = 150;
+            let apple = null;
+            let has_eaten = false;
+            let score = 0;
+            let snake_body = [];
+            let game_over = new Audio('/static/assets/game_over.ogg');
+            let eat_apple = new Audio("/static/assets/bite.mp3");
+            let muted = false;
+
+            function init_game() {
+                let game = document.querySelector('.game');
+                for (let y = 15; y > 0; y--) {
+                    for (let x = 1; x <= 17; x++) {
+                        if (y % 2 !== 0) { //toq => white
+                            game.innerHTML += `<div class="square ${x % 2 !== 0 ? 'white' : 'black'}" data-x="${x}" data-y="${y}"></div>` //toq =>white
+                        } else {
+                            game.innerHTML += `<div class="square ${x % 2 !== 0 ? 'black' : 'white'}" data-x="${x}" data-y="${y}"></div>` //toq => black
+                        }
+                    }
+                }
+                let x_rand = Math.ceil(Math.random() * 17)
+                let y_rand = Math.ceil(Math.random() * 15)
+                game.innerHTML += `<span id="apple" data-x="${x_rand}" data-y="${y_rand}" style="left:${(x_rand - 1) * 32.58}px; bottom: ${(y_rand - 1) * 32.58}px">🍎</span>`
+            }
+            init_game()
+
+            // ===================================control snake=======================================
+            document.body.addEventListener("keydown", (e) => {
+                if ((e.key == "ArrowRight" && prev_dir !== "ArrowLeft") || (e.key == "ArrowLeft" && prev_dir !== "ArrowRight") || (e.key == "ArrowDown" && prev_dir !== "ArrowUp") || (e.key == "ArrowUp" && prev_dir !== "ArrowDown") || (e.key === " ")) {
+                    move(e.key)
+                }
+            })
+
+            function move(dir) {
+                let snake = document.querySelector('.snake');
+                clearInterval(run_interval_id) //har safar keyboard bosilganda eski interval ochiriladi
+
+                run_interval_id = setInterval(() => {
+                    let game = document.querySelector('.game');
+                    let x = Number(snake.getAttribute("data-x"))
+                    let y = Number(snake.getAttribute("data-y"));
+                    // target snake
+                    if (dir == "ArrowRight" && prev_dir !== "ArrowLeft") {
+                        (x === 17) ? x = 1 : x++;
+                    } else if (dir == "ArrowLeft" && prev_dir !== "ArrowRight") {
+                        (x === 1) ? x = 17 : x--;
+                    } else if (dir == "ArrowDown" && prev_dir !== "ArrowUp") {
+                        (y === 1) ? y = 15 : y--;
+                    } else if (dir == "ArrowUp" && prev_dir !== "ArrowDown") {
+                        (y === 15) ? y = 1 : y++;
+                    } else if (dir === " ") { //stop snake
+                        clearInterval(run_interval_id)
+                        return;
+                    }
+                    // if snake is dead
+                    for (let i = 0; i < snake_body.length; i++) {
+                        if (snake_body[i].x === x && snake_body[i].y === y) {
+                            clearInterval(run_interval_id) //game over
+                            muted ? "" : game_over.play();
+                            document.querySelector('#game_over_modal').classList.add("active");
+                            document.querySelector('#name').focus()
+                            snake_body.forEach((body) => {
+                                body.tail.remove()
+                            });
+                            snake_body = [];
+                            return false
+                        }
+                    }
+                    // move snake_head one step
+                    snake.style.left = `${(x - 1) * 32.58}px`;
+                    snake.style.bottom = `${(y - 1) * 32.58}px`;
+                    snake.setAttribute("data-x", `${x}`)
+                    snake.setAttribute("data-y", `${y}`)
+                    // snake_head has moved !!!
+                    // move snake_body
+                    if (snake_body.length) {
+                        if (snake_body.length === 1) {
+                            game.append(snake_body[snake_body.length - 1].tail);
+                            create_tail(x, y)
+                        } else {
+                            snake_body[0].tail.remove();
+                            snake_body.shift()
+                            game.append(snake_body[snake_body.length - 1].tail);
+                            create_tail(x, y)
+                        }
+                    }
+                    // if snake eats apple
+                    if (document.querySelector('#apple').getAttribute("data-x") == x && document.querySelector('#apple').getAttribute("data-y") == y) { //olmani yedi
+                        earn_score()
+                        create_tail(x, y)
+                    }
+
+                }, snake_speed);
+                prev_dir = dir;
+            }
+            function earn_score() {
+                muted ? "" : eat_apple.play()
+                score++;
+                let x_rand = Math.ceil(Math.random() * 17)
+                let y_rand = Math.ceil(Math.random() * 15)
+                // shu joyiga bir nima o'ylash kerak. While ga tushmadi
+                for (let i = 0; i < snake_body.length; i++) {
+                    if (snake_body[i].x === x_rand && snake_body[i].y === y_rand) {
+                        x_rand = Math.ceil(Math.random() * 17)
+                        y_rand = Math.ceil(Math.random() * 15)
+                        // again = true;
+                        // break;
+                    }
+                    // else {
+                    //     again = false
+                    // }
+                }
+                document.querySelectorAll('.score_val').forEach(element => {
+                    element.innerHTML = `${score}`
+                });
+                document.querySelector('#apple').setAttribute("data-x", `${x_rand}`)
+                document.querySelector('#apple').setAttribute("data-y", `${y_rand}`)
+                document.querySelector('#apple').style.left = `${(x_rand - 1) * 32.58}px`
+                document.querySelector('#apple').style.bottom = `${(y_rand - 1) * 32.58}px`
+            }
+            function create_tail(x, y) {
+                let tail = document.createElement("div");
+                tail.classList.add("snake")
+                tail.classList.add("tail")
+                tail.setAttribute("tail-x", x)
+                tail.setAttribute("tail-y", y)
+                tail.style.left = `${(x - 1) * 32.58}px`;
+                tail.style.bottom = `${(y - 1) * 32.58}px`;
+                snake_body.push({
+                    tail,
+                    x,
+                    y
+                })
+            }
+
+            document.querySelector('#show_leaderboards').addEventListener("click", () => {
+                document.querySelector('#leaderboard_modal').classList.add("active");
+            });
+            document.querySelector('.close_leaderboards').addEventListener("click", (e) => {
+                e.preventDefault()
+                document.querySelector('#leaderboard_modal').classList.remove("active");
+            });
+            document.querySelector('#close_modal').addEventListener("click", (e) => {
+                e.preventDefault()
+                score = 0;
+                document.querySelector('#game_over_modal').classList.remove("active");
+            });
+            document.querySelector('#mute').addEventListener("click", (e) => {
+                if (muted) {
+                    e.target.src = "https://www.gstatic.com/images/icons/material/system/2x/volume_up_white_24dp.png";
+                    muted = false
+                } else {
+                    e.target.src = "https://www.gstatic.com/images/icons/material/system/2x/volume_off_white_24dp.png";
+                    muted = true
+                }
+            });
+            document.querySelector('#re_play').addEventListener("click", (e) => {
+                window.location.reload()
+            });
+
+            document.querySelector('#submit').addEventListener("click", async (e) => {
+                e.preventDefault()
+                let player = document.querySelector('#name').value;
+                if (player.length < 20 && player.length > 1) {
+                    document.querySelector('#game_over_modal').classList.remove("active");
+                    fetch("/add_score", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            player,
+                            scored: score
+                        })
+                    })
+                }
+            });
+
+            document.querySelector('#name').addEventListener("keyup", (e) => {
+                if (e.target.value.length > 20) {
+                    document.querySelector('.name_error').classList.add("active");
+                } else {
+                    document.querySelector('.name_error').classList.remove("active");
+                }
+            });
+        </script>
     </body>
 
     </html>
