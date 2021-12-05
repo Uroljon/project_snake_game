@@ -55,9 +55,11 @@
             <div id="leaderboard_modal">
                 <h3>Leaderboard</h3>
                 <div>
-                    <% for(let i=0; i<leaderboards.length; i++){ %>
-                        <p><span class="order"><%=i+1 %>. </span> <span class="who"><%=leaderboards[i].name %> ➡️</span> <span class="how_much"><%=leaderboards[i].score %> </span></p>
-                    <% } %> 
+                    <% if(leaderboards?.length) {%>
+                        <% for(let i=0; i<leaderboards.length; i++){ %>
+                            <p><span class="order"><%=i+1 %>. </span> <span class="who"><%=leaderboards[i].name %> ➡️</span> <span class="how_much"><%=leaderboards[i].score %> </span></p>
+                        <% } %> 
+                    <% } %>  
                 </div>
                 <button class="close_leaderboards">Close</button>
             </div>
